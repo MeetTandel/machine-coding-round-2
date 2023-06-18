@@ -1,0 +1,40 @@
+.home__container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 10px;
+}
+
+.habits__container {
+  width: 100%;
+  max-width: 800px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  grid-gap: 10px;
+}
+
+.habit {
+  height: 150px;
+  border-radius: 8px;
+  text-align: left;
+  padding-top: 15px;
+  padding-left: 20px;
+  font-size: 1.5rem;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.create-habit {
+  background-color: #cbcbcb;
+  color: #787878;
+}
+
+.modal .MuiPopover-paper {
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  max-height: calc(100% - 10px) !important;
+  background-color: #262626;
+  color: white;
+}
