@@ -5,6 +5,7 @@ const HabitContext = createContext();
 
 const initialState = {
   habits: habits ?? [],
+  archivedHabits: [],
   repeatDropDown: [
     {
       name: "Daily",
@@ -31,6 +32,14 @@ const initialState = {
     {
       name: "3 times",
       value: "3 times",
+    },
+    {
+      name: "4 times",
+      value: "4 times",
+    },
+    {
+      name: "5 times",
+      value: "5 times",
     },
   ],
   timeDropDown: [
@@ -61,8 +70,12 @@ const initialState = {
       value: "Tomorrow",
     },
     {
-      name: "Day After Tomorrow",
-      value: "Day After Tomorrow",
+      name: "Next Week",
+      value: "Next Week",
+    },
+    {
+      name: "Next Month",
+      value: "Next Month",
     },
   ],
 };
@@ -78,6 +91,7 @@ export function HabitProvider({ children }) {
         goalsDropDown: habitState.goalsDropDown,
         timeDropDown: habitState.timeDropDown,
         startDayDropDown: habitState.startDayDropDown,
+        archivedHabits: habitState.archivedHabits,
         dispatch,
       }}
     >

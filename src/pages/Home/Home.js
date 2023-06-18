@@ -1,19 +1,22 @@
-import { Popover } from "@material-ui/core";
 import React, { useState } from "react";
+import { Popover } from "@material-ui/core";
+import ArchiveIcon from "@material-ui/icons/Archive";
+import EditIcon from "@material-ui/icons/Edit";
+import DeleteIcon from "@material-ui/icons/Delete";
 import { Habit } from "../../components/Habit";
 import { useHabits } from "../../context/HabitContext";
 import "./Home.css";
-
+import { NavLink } from "react-router-dom";
 
 export const Home = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [modalType, setModalType] = useState(null);
   const [selectedHabit, setSelectedHabit] = useState([]);
-  const { habits, dispatch } = useHabits();
+  const { archivedHabits, habits, dispatch } = useHabits();
 
   const handleClick = (event, type, habit) => {
     setModalType(type);
-    setSelectedHabit(habit);
+    setSelectedHabit(habit ?? []);
     setAnchorEl(event.currentTarget);
   };
 
@@ -24,10 +27,11 @@ export const Home = () => {
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
 
-  console.log("hab", habits)
-
   return (
     <div className="home__container">
+      <NavLink to="/archive">
+        <button className="archive-button">Archived</button>
+      </NavLink>
       <div className="habits__container">
         <div
           className="habit create-habit"
@@ -37,6 +41,7 @@ export const Home = () => {
         </div>
         {habits.map((habit) => (
           <div
+            key={habit.id}
             className="habit"
             style={{
               color: habit.textColor,
@@ -44,7 +49,39 @@ export const Home = () => {
             }}
             onClick={(e) => handleClick(e, "edit", habit)}
           >
-            {habit.name}
+            <p>{habit.name}</p>
+            <div className="habit__button__container">
+              <button
+                className="edit"
+                onClick={(e) => handleClick(e, "edit", habit)}
+              >
+                <EditIcon style={{ color: habit.textColor }} />
+              </button>
+              <button
+                className="archive"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  dispatch({
+                    type: "ARCHIVE_HABIT",
+                    payload: habit,
+                  });
+                }}
+              >
+                <ArchiveIcon style={{ color: habit.textColor }} />
+              </button>
+              <button
+                className="delete"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  dispatch({
+                    type: "DELETE_HABIT",
+                    payload: habit.id,
+                  });
+                }}
+              >
+                <DeleteIcon style={{ color: habit.textColor }} />
+              </button>
+            </div>
           </div>
         ))}
       </div>
@@ -78,8 +115,16 @@ export const Home = () => {
           horizontal: "center",
         }}
       >
-        {modalType === "create" && <Habit handleClose={handleClose} />}
-        {modalType === "edit" && <Habit handleClose={handleClose} />}
+        {modalType === "create" && (
+          <Habit handleClose={handleClose} type="create" />
+        )}
+        {modalType === "edit" && (
+          <Habit
+            handleClose={handleClose}
+            type="edit"
+            selectedHabit={selectedHabit}
+          />
+        )}
       </Popover>
     </div>
   );

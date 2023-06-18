@@ -4,7 +4,7 @@ import { getRandomColors } from "../helpers/utils";
 import "./Habit.css";
 import SelectDropDown from "./SelectDropDown/SelectDropDown";
 
-export const Habit = ({ handleClose }) => {
+export const Habit = ({ handleClose, selectedHabit, type }) => {
   const {
     habits,
     repeatDropDown,
@@ -15,28 +15,39 @@ export const Habit = ({ handleClose }) => {
   } = useHabits();
   const [goalsDrop, setGoalDrop] = useState(goalsDropDown);
 
-  const [habitName, setHabitName] = useState("");
+  const [habitName, setHabitName] = useState(selectedHabit?.name ?? "");
   const [error, setError] = useState(null);
-  const [repeat, setRepeat] = useState("");
-  const [goals, setGoals] = useState("");
-  const [time, setTime] = useState("");
-  const [startDay, setStartDay] = useState("");
+  const [repeat, setRepeat] = useState(selectedHabit?.repeat ?? "");
+  const [goals, setGoals] = useState(selectedHabit?.goals ?? "");
+  const [time, setTime] = useState(selectedHabit?.time ?? "");
+  const [startDay, setStartDay] = useState(selectedHabit?.startDay ?? "");
 
   useEffect(() => {
-    if (repeat.length > 0) {
+    if (
+      repeat.length > 0 ||
+      (type === "edit" && selectedHabit?.repeat?.length > 0)
+    ) {
       setGoalDrop(
         goalsDropDown.map((item) => ({
           name: `${item.name} ${repeat}`,
           value: `${item.name} ${repeat}`,
         }))
       );
-      // setGoals()
+      setGoals(
+        goals.includes("Daily") ||
+          goals.includes("Weekly") ||
+          goals.includes("Monthly")
+          ? `${goals.split(" ").slice(0, -1).join(" ")} ${repeat}`
+          : `${goals} ${repeat}`
+      );
     }
   }, [repeat]);
 
   return (
     <div className="modal__habit__container">
-      <h3 className="habit__title">New habit</h3>
+      <h3 className="habit__title">
+        {type === "create" ? "New habit" : "Edit habit"}
+      </h3>
 
       <section className="grid">
         <div className="section__title">
@@ -50,6 +61,7 @@ export const Habit = ({ handleClose }) => {
 
           <input
             type="text"
+            value={habitName}
             onChange={(e) => {
               setError(null);
               setHabitName(e.target.value);
@@ -136,15 +148,15 @@ export const Habit = ({ handleClose }) => {
         <button
           className="discard"
           onClick={() => {
-            setHabitName("")
-            setRepeat("")
-            setGoalDrop(goalsDropDown)
-            setTime("")
-            setStartDay("")
+            setHabitName("");
+            setRepeat("");
+            setGoalDrop(goalsDropDown);
+            setTime("");
+            setStartDay("");
             handleClose();
           }}
         >
-          Discard
+          {type === "create" ? "Discard" : "Cancel"}
         </button>
         <button
           className="save"
@@ -152,12 +164,18 @@ export const Habit = ({ handleClose }) => {
             if (habitName.length > 0) {
               const randomColor = getRandomColors();
               dispatch({
-                type: "ADD_HABIT",
+                type: type === "create" ? "ADD_HABIT" : "EDIT_HABIT",
                 payload: {
-                  id: habits.length + 1,
+                  id: type === "create" ? habits.length + 1 : selectedHabit.id,
                   name: habitName,
-                  textColor: randomColor.textColor,
-                  backgroundColor: randomColor.backgroundColor,
+                  textColor:
+                    type === "create"
+                      ? randomColor.textColor
+                      : selectedHabit.textColor,
+                  backgroundColor:
+                    type === "create"
+                      ? randomColor.backgroundColor
+                      : selectedHabit.backgroundColor,
                   repeat: repeat,
                   goals: goals,
                   time: time,

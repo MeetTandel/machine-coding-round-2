@@ -16,6 +16,7 @@
 .error {
   color: red;
   margin: 0;
+  margin-left: 60px;
 }
 
 .grid {
@@ -54,6 +55,7 @@ section {
   background-color: var(--light-gray);
   border-radius: var(--border-radius);
   border: none;
+  font-size: 1rem;
   color: white;
 }
 .question {

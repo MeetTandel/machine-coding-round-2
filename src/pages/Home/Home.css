@@ -6,6 +6,17 @@
   padding: 10px;
 }
 
+.archive-button {
+  color: black;
+  background-color: #fff;
+  margin-bottom: 10px;
+  font-size: 1rem;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
 .habits__container {
   width: 100%;
   max-width: 800px;
@@ -23,6 +34,27 @@
   font-size: 1.5rem;
   font-weight: 650;
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.habit p {
+  margin: 0;
+}
+
+.habit__button__container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px
+}
+
+.habit__button__container button {
+  margin-right: 5px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
 }
 
 .create-habit {
